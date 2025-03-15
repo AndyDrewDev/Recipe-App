@@ -1,0 +1,343 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;600&display=swap');
+
+:root {
+  --primary-color: #6a11cb;
+  --secondary-color: #2575fc;
+  --background-gradient: linear-gradient(to right, #ffffff, #f5f7fa);
+  --card-bg: #ffffff;
+  --text-color: #333;
+  --text-light: #666;
+  --border-radius: 12px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --fav-bg: #f0e7ff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--background-gradient);
+  background: -webkit-linear-gradient(to right, #ffffff, #ece9e6);
+  background: linear-gradient(to right, #ffffff, #ece9e6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+  margin: 0;
+  min-height: 100vh;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+}
+
+.mobile-container {
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  width: 400px;
+  max-width: 95vw;
+  transition: transform var(--transition-normal);
+}
+
+.mobile-container:hover {
+  transform: translateY(-5px);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background-color: var(--card-bg);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+header input {
+  background-color: #f5f5f5;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  font-family: inherit;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  transition: all var(--transition-fast);
+}
+
+header input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+}
+
+header button {
+  background-color: transparent;
+  border: none;
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  margin-left: 10px;
+  transition: transform var(--transition-fast);
+}
+
+header button:hover {
+  transform: scale(1.1);
+}
+
+.fav-container {
+  background-color: var(--fav-bg);
+  padding: 1rem;
+  text-align: center;
+}
+
+.fav-container h3 {
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+.fav-meals {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style-type: none;
+  padding: 0;
+  gap: 10px;
+}
+
+.fav-meals li {
+  cursor: pointer;
+  position: relative;
+  margin: 5px;
+  width: 75px;
+  transition: transform var(--transition-fast);
+}
+
+.fav-meals li:hover {
+  transform: scale(1.05);
+}
+
+.fav-meals li .clear {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  font-size: 1.2rem;
+  color: #ff5252;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.fav-meals li:hover .clear {
+  opacity: 1;
+}
+
+.fav-meals li .clear:hover {
+  transform: scale(1.2);
+}
+
+.fav-meals li img {
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+  object-fit: cover;
+  height: 70px;
+  width: 70px;
+  transition: all var(--transition-normal);
+}
+
+.fav-meals li:hover img {
+  box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.3);
+}
+
+.fav-meals li span {
+  display: inline-block;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 75px;
+  margin-top: 5px;
+  color: var(--text-color);
+}
+
+.meal {
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  margin: 1.5rem;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.meal:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-5px);
+}
+
+.meal-header {
+  position: relative;
+  overflow: hidden;
+}
+
+.meal-header .random {
+  position: absolute;
+  top: 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.meal-header img {
+  object-fit: cover;
+  height: 250px;
+  width: 100%;
+  transition: transform var(--transition-normal);
+}
+
+.meal:hover .meal-header img {
+  transform: scale(1.05);
+}
+
+.meal-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem;
+}
+
+.meal-body h4 {
+  margin: 0;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.meal-body .fav-btn {
+  border: none;
+  background-color: transparent;
+  color: #ddd;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: all var(--transition-fast);
+}
+
+.meal-body .fav-btn:hover {
+  transform: scale(1.1);
+}
+
+.meal-body .fav-btn.active {
+  color: var(--primary-color);
+}
+
+.popup-container {
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity var(--transition-normal);
+}
+
+.popup-container.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.popup {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  position: relative;
+  overflow: auto;
+  max-height: 90vh;
+  max-width: 600px;
+  width: 95%;
+  box-shadow: var(--shadow-md);
+  transform: scale(1);
+  transition: transform var(--transition-normal);
+}
+
+.popup-container.hidden .popup {
+  transform: scale(0.9);
+}
+
+.popup .close-popup {
+  background-color: rgba(0, 0, 0, 0.05);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  transition: all var(--transition-fast);
+}
+
+.popup .close-popup:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: rotate(90deg);
+}
+
+.meal-info h1 {
+  text-align: center;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+/* Додаємо стилі для інгредієнтів та інструкцій */
+.meal-info p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: var(--text-light);
+}
+
+.meal-info ul {
+  list-style-position: inside;
+  margin-bottom: 1.5rem;
+}
+
+.meal-info li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+/* Додаємо медіа-запити для кращої адаптивності */
+@media (max-width: 500px) {
+  .mobile-container {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .meal {
+    margin: 1rem 0.5rem;
+  }
+}
