@@ -358,10 +358,6 @@ header button:hover {
     transition: none;
   }
 
-  .fav-meals li:hover img {
-    box-shadow: var(--shadow-sm);
-  }
-
   .meal-body .fav-btn {
     transition: none;
   }
