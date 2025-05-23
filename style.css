@@ -3,15 +3,13 @@
 :root {
   --primary-color: #6a11cb;
   --secondary-color: #2575fc;
-  --background-gradient: linear-gradient(to right, #ffffff, #f5f7fa);
   --card-bg: #ffffff;
   --text-color: #333;
   --text-light: #666;
   --border-radius: 12px;
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --transition-fast: 0.2s ease;
-  --transition-normal: 0.3s ease;
+  --transition: 0.3s ease;
   --fav-bg: #f0e7ff;
 }
 
@@ -22,15 +20,12 @@
 }
 
 body {
-  background: var(--background-gradient);
-  background: -webkit-linear-gradient(to right, #ffffff, #ece9e6);
   background: linear-gradient(to right, #ffffff, #ece9e6);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Poppins', sans-serif;
   color: var(--text-color);
-  margin: 0;
   min-height: 100vh;
 }
 
@@ -50,10 +45,11 @@ button {
   overflow: hidden;
   width: 400px;
   max-width: 95vw;
-  transition: transform var(--transition-normal);
+  transition: transform var(--transition);
   margin: 20px;
 }
 
+/* Header */
 header {
   display: flex;
   align-items: center;
@@ -70,7 +66,7 @@ header input {
   font-family: inherit;
   padding: 0.75rem 1rem;
   width: 100%;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
 }
 
 header input:focus {
@@ -85,40 +81,115 @@ header button {
   color: var(--primary-color);
   font-size: 1.5rem;
   margin-left: 10px;
-  transition: transform var(--transition-fast);
+  transition: transform 0.2s ease;
 }
 
 header button:hover {
   transform: scale(1.1);
 }
 
+/* Favorites Container */
 .fav-container {
   background-color: var(--fav-bg);
   padding: 1rem;
   text-align: center;
+  position: relative;
 }
 
 .fav-container h3 {
   margin-bottom: 0.75rem;
   font-weight: 500;
   color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: color 0.2s ease;
 }
 
+.fav-container h3:hover {
+  color: var(--secondary-color);
+}
+
+.fav-container h3 .toggle-icon {
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+
+.fav-container.expanded .toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* Favorite Meals List */
 .fav-meals {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   list-style-type: none;
-  padding: 0;
+  padding: 5px;
   gap: 10px;
+  overflow: hidden;
+  transition: max-height var(--transition);
+  max-height: 105px;
+  scroll-behavior: smooth;
 }
 
+.fav-container.expanded .fav-meals {
+  max-height: 285px;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* Hide scrollbar for WebKit browsers by default */
+.fav-container.expanded .fav-meals::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+/* Show scrollbar on hover over the container */
+.fav-container.expanded:hover .fav-meals {
+  scrollbar-width: thin; /* Firefox */
+}
+
+.fav-container.expanded:hover .fav-meals::-webkit-scrollbar {
+  width: 6px;
+  display: block;
+}
+
+.fav-container.expanded:hover .fav-meals::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.fav-container.expanded:hover .fav-meals::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 4px;
+  opacity: 0.8;
+}
+
+.fav-container.expanded:hover .fav-meals::-webkit-scrollbar-thumb:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Empty state message */
+.fav-meals:empty::after {
+  content: 'No favorite meals yet. Click the heart ♡ to add some!';
+  display: block;
+  color: var(--text-light);
+  font-style: italic;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Favorite meal items */
 .fav-meals li {
   cursor: pointer;
   position: relative;
   margin: 5px;
   width: 75px;
-  transition: transform var(--transition-fast);
+  transition: transform 0.2s ease;
 }
 
 .fav-meals li:hover {
@@ -135,7 +206,7 @@ header button:hover {
   right: -0.5rem;
   font-size: 1.2rem;
   color: #ff5252;
-  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  transition: all 0.2s ease;
 }
 
 .fav-meals li:hover .clear {
@@ -153,7 +224,7 @@ header button:hover {
   object-fit: cover;
   height: 70px;
   width: 70px;
-  transition: all var(--transition-normal);
+  transition: box-shadow var(--transition);
 }
 
 .fav-meals li:hover img {
@@ -162,15 +233,17 @@ header button:hover {
 
 .fav-meals li span {
   display: inline-block;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   width: 75px;
-  margin-top: 5px;
+  margin-top: 3px;
   color: var(--text-color);
+  text-align: center;
 }
 
+/* Removed state */
 .fav-meals li.removed {
   opacity: 0.5;
   pointer-events: none;
@@ -185,13 +258,44 @@ header button:hover {
   color: #999;
 }
 
+/* Gradient indicator for overflow */
+.fav-meals::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(transparent, var(--fav-bg));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.fav-container:not(.expanded).has-overflow .fav-meals::after {
+  opacity: 1;
+}
+
+/* Mobile refresh hint */
+.mobile-refresh-hint {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 10px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #856404;
+}
+
+/* Meal Cards */
 .meal {
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-sm);
   cursor: pointer;
   margin: 1.5rem;
   overflow: hidden;
-  transition: all var(--transition-normal);
+  transition: all var(--transition);
 }
 
 .meal:hover {
@@ -221,7 +325,7 @@ header button:hover {
   object-fit: cover;
   height: 250px;
   width: 100%;
-  transition: transform var(--transition-normal);
+  transition: transform var(--transition);
 }
 
 .meal:hover .meal-header img {
@@ -247,7 +351,7 @@ header button:hover {
   color: #ddd;
   cursor: pointer;
   font-size: 1.5rem;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
 }
 
 .meal-body .fav-btn:hover {
@@ -258,19 +362,17 @@ header button:hover {
   color: var(--primary-color);
 }
 
+/* Popup */
 .popup-container {
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  inset: 0;
   z-index: 1000;
   opacity: 1;
-  transition: opacity var(--transition-normal);
+  transition: opacity var(--transition);
 }
 
 .popup-container.hidden {
@@ -289,7 +391,7 @@ header button:hover {
   width: 95%;
   box-shadow: var(--shadow-md);
   transform: scale(1);
-  transition: transform var(--transition-normal);
+  transition: transform var(--transition);
 }
 
 .popup-container.hidden .popup {
@@ -310,7 +412,7 @@ header button:hover {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
 }
 
 .popup .close-popup:hover {
@@ -340,10 +442,38 @@ header button:hover {
   line-height: 1.5;
 }
 
+/* Responsive Design */
+@media (min-width: 501px) {
+  .mobile-container {
+    width: 600px;
+    max-width: 90vw;
+  }
+
+  .fav-meals {
+    max-height: 120px;
+  }
+
+  .fav-container.expanded .fav-meals {
+    max-height: 285px;
+  }
+
+  .fav-container.expanded:hover .fav-meals::-webkit-scrollbar {
+    width: 8px;
+  }
+}
+
 @media (max-width: 500px) {
   .mobile-container {
     width: 100%;
-    transition: none;
+  }
+
+  .fav-container h3 {
+    font-size: 1rem;
+    padding: 0.5rem 0;
+  }
+
+  .fav-container.expanded .fav-meals {
+    max-height: 300px;
   }
 
   .mobile-refresh-hint {
@@ -361,53 +491,38 @@ header button:hover {
     }
   }
 
-  .meal {
-    margin: 1rem 0.5rem;
-    transition: none;
+  /* Disable hover effects on mobile */
+  .meal:hover,
+  .meal:hover .meal-header img,
+  .fav-meals li:hover,
+  .meal-body .fav-btn:hover,
+  header button:hover,
+  .fav-meals li .clear:hover {
+    transform: none;
   }
 
   .meal:hover {
-    transform: none;
     box-shadow: var(--shadow-sm);
   }
 
-  .meal:hover .meal-header img {
-    transform: none;
+  /* For mobile, show scrollbar always when expanded (touch devices need visible scrollbar) */
+  .fav-container.expanded .fav-meals {
+    scrollbar-width: thin;
   }
 
-  .fav-meals li {
-    transition: none;
+  .fav-container.expanded .fav-meals::-webkit-scrollbar {
+    width: 4px;
+    display: block;
   }
 
-  .fav-meals li:hover {
-    transform: none;
+  .fav-container.expanded .fav-meals::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 2px;
   }
 
-  .fav-meals li img {
-    transition: none;
-  }
-
-  .meal-body .fav-btn {
-    transition: none;
-  }
-
-  .meal-body .fav-btn:hover {
-    transform: none;
-  }
-
-  header button {
-    transition: none;
-  }
-
-  header button:hover {
-    transform: none;
-  }
-
-  .fav-meals li .clear {
-    transition: none;
-  }
-
-  .fav-meals li .clear:hover {
-    transform: none;
+  .fav-container.expanded .fav-meals::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 2px;
+    opacity: 0.6;
   }
 }
