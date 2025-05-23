@@ -329,10 +329,60 @@ header button:hover {
 @media (max-width: 500px) {
   .mobile-container {
     width: 100%;
-    border-radius: 0;
+    transition: none;
   }
 
   .meal {
     margin: 1rem 0.5rem;
+    transition: none;
+  }
+
+  .meal:hover {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .meal:hover .meal-header img {
+    transform: none;
+  }
+
+  .fav-meals li {
+    transition: none;
+  }
+
+  .fav-meals li:hover {
+    transform: none;
+  }
+
+  .fav-meals li img {
+    transition: none;
+  }
+
+  .fav-meals li:hover img {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .meal-body .fav-btn {
+    transition: none;
+  }
+
+  .meal-body .fav-btn:hover {
+    transform: none;
+  }
+
+  header button {
+    transition: none;
+  }
+
+  header button:hover {
+    transform: none;
+  }
+
+  .fav-meals li .clear {
+    transition: none;
+  }
+
+  .fav-meals li .clear:hover {
+    transform: none;
   }
 }
