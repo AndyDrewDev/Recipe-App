@@ -7,6 +7,66 @@ const popupCloseBtn = document.getElementById('close-popup')
 const searchTerm = document.getElementById('search-term')
 const searchBtn = document.getElementById('search')
 
+// Функція для визначення мобільного пристрою
+function isMobileDevice() {
+  return (
+    window.innerWidth <= 500 ||
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+  )
+}
+
+// Масив для збереження видалених на мобільних пристроях ID
+let removedOnMobile = []
+
+// Функція для очищення видалених рецептів при оновленні сторінки
+function cleanupRemovedMeals() {
+  const removedItems = JSON.parse(
+    localStorage.getItem('removedOnMobile') || '[]'
+  )
+
+  if (removedItems.length > 0) {
+    const currentFavorites = getMealsFromLocalStorage()
+    const cleanedFavorites = currentFavorites.filter(
+      (id) => !removedItems.includes(id)
+    )
+
+    localStorage.setItem('mealIds', JSON.stringify(cleanedFavorites))
+    localStorage.removeItem('removedOnMobile')
+  }
+}
+
+// Зберігати видалені на мобільних пристроях елементи в localStorage
+function saveRemovedToStorage() {
+  localStorage.setItem('removedOnMobile', JSON.stringify(removedOnMobile))
+}
+
+// Функція для м'якого оновлення улюблених на мобільних пристроях
+function softUpdateFavorites() {
+  if (isMobileDevice()) {
+    // На мобільних пристроях додаємо тільки нові елементи
+    const currentFavorites = getMealsFromLocalStorage()
+    const existingIds = Array.from(favoriteContainer.children)
+      .map((li) => li.getAttribute('data-meal-id'))
+      .filter(Boolean)
+
+    const newIds = currentFavorites.filter((id) => !existingIds.includes(id))
+
+    // Додаємо тільки нові рецепти
+    newIds.forEach(async (mealId) => {
+      const meal = await getMealById(mealId)
+      addMealToFavorites(meal)
+    })
+  } else {
+    // На десктопі - повне оновлення
+    fetchFavorites()
+  }
+}
+
+// Виконуємо очищення при завантаженні сторінки
+cleanupRemovedMeals()
+
 getRandomMeal()
 fetchFavorites()
 
@@ -79,7 +139,12 @@ function addMeal(mealData, random = false) {
       btn.classList.add('active')
     }
 
-    fetchFavorites()
+    // На мобільних пристроях не оновлюємо блок улюблених при додаванні
+    if (!isMobileDevice()) {
+      fetchFavorites()
+    } else {
+      softUpdateFavorites()
+    }
   })
 
   meal.addEventListener('click', () => {
@@ -124,6 +189,7 @@ async function fetchFavorites() {
 
 function addMealToFavorites(mealData) {
   const favoriteMeal = document.createElement('li')
+  favoriteMeal.setAttribute('data-meal-id', mealData.idMeal)
 
   favoriteMeal.innerHTML = `
         <img
@@ -137,13 +203,42 @@ function addMealToFavorites(mealData) {
 
   btn.addEventListener('click', (event) => {
     event.stopPropagation()
-    removeMealFromLocalStorage(mealData.idMeal)
 
-    fetchFavorites()
+    if (isMobileDevice()) {
+      // На мобільних пристроях - тільки візуальне позначення
+      favoriteMeal.classList.add('removed')
+      removedOnMobile.push(mealData.idMeal)
+      saveRemovedToStorage()
+
+      // Додаємо подсказку про необхідність оновлення
+      if (!document.querySelector('.mobile-refresh-hint')) {
+        const hint = document.createElement('div')
+        hint.className = 'mobile-refresh-hint'
+        hint.style.cssText = `
+          background: #fff3cd;
+          border: 1px solid #ffeaa7;
+          border-radius: 8px;
+          padding: 10px;
+          margin: 10px;
+          text-align: center;
+          font-size: 0.9rem;
+          color: #856404;
+        `
+        hint.textContent = 'Оновіть сторінку для видалення рецептів'
+        favoriteContainer.parentNode.insertBefore(hint, favoriteContainer)
+      }
+    } else {
+      // На десктопі - стандартна поведінка
+      removeMealFromLocalStorage(mealData.idMeal)
+      fetchFavorites()
+    }
   })
 
   favoriteMeal.addEventListener('click', () => {
-    showMealInfo(mealData)
+    // Не показувати інформацію про видалені на мобільних рецепти
+    if (!favoriteMeal.classList.contains('removed')) {
+      showMealInfo(mealData)
+    }
   })
 
   favoriteContainer.appendChild(favoriteMeal)
