@@ -111,7 +111,6 @@ function getMealsFromLocalStorage() {
 }
 
 async function fetchFavorites() {
-  // clean the container
   favoriteContainer.innerHTML = ''
 
   const mealIds = getMealsFromLocalStorage()
@@ -151,15 +150,12 @@ function addMealToFavorites(mealData) {
 }
 
 function showMealInfo(mealData) {
-  // clean it up
   mealInfoElement.innerHTML = ''
 
-  // update the Meal info
   const mealElement = document.createElement('div')
 
   const ingredients = []
 
-  // get ingredients and measures
   for (let i = 1; i <= 20; i++) {
     const ingredient = mealData[`strIngredient${i}`]
     const measure = mealData[`strMeasure${i}`]
@@ -188,12 +184,10 @@ function showMealInfo(mealData) {
 
   mealInfoElement.appendChild(mealElement)
 
-  // show the popup
   mealPopup.classList.remove('hidden')
 }
 
 searchBtn.addEventListener('click', async () => {
-  // clean container
   mealsElement.innerHTML = ''
 
   const search = searchTerm.value
