@@ -51,10 +51,7 @@ button {
   width: 400px;
   max-width: 95vw;
   transition: transform var(--transition-normal);
-}
-
-.mobile-container:hover {
-  transform: translateY(-5px);
+  margin: 20px;
 }
 
 header {
